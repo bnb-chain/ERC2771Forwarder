@@ -66,22 +66,22 @@ const config: HardhatUserConfig = {
                 network: "opBNB",
                 chainId: 204, // opBNB Mainnet
                 urls: {
-                    // apiURL: `https://api-opbnb.bscscan.com/api`,  // opBNB Mainnet
-                    // browserURL: "https://opbnb.bscscan.com",  // opBNB mainnet
+                    apiURL: `https://api-opbnb.bscscan.com/api`,  // opBNB Mainnet
+                    browserURL: "https://opbnb.bscscan.com",  // opBNB mainnet
 
-                    apiURL: `https://open-platform-tmp.bk.nodereal.cc/${process.env.OPBNBSCAN_APIKEY}/op-bnb-mainnet/contract/`,
-                    browserURL: "https://opbnbscan.com/",
+                    // apiURL: `https://open-platform-tmp.bk.nodereal.cc/${process.env.OPBNBSCAN_APIKEY}/op-bnb-mainnet/contract/`,
+                    // browserURL: "https://opbnbscan.com/",
                 },
             },
             {
                 network: "opBNBTestnet",
                 chainId: 5611, // opBNB Testnet
                 urls: {
-                    // apiURL: `https://api-opbnb-testnet.bscscan.com/api`,  // opBNB Testnet
-                    // browserURL: "https://opbnb-testnet.bscscan.com/",  // opBNB Testnet
+                    apiURL: `https://api-opbnb-testnet.bscscan.com/api`,  // opBNB Testnet
+                    browserURL: "https://opbnb-testnet.bscscan.com/",  // opBNB Testnet
 
-                    apiURL: `https://open-platform-tmp.bk.nodereal.cc/${process.env.OPBNBSCAN_APIKEY}/op-bnb-testnet/contract/`,
-                    browserURL: "https://opbnbscan.com/",
+                    // apiURL: `https://open-platform-tmp.bk.nodereal.cc/${process.env.OPBNBSCAN_APIKEY}/op-bnb-testnet/contract/`,
+                    // browserURL: "https://testnet.opbnbscan.com/",
                 },
             },
         ],
