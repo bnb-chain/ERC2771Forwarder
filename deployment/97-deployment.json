@@ -1,0 +1,9 @@
+{
+  "ChainId": "97",
+  "Operator": "0xc6D57a72C18D32cd9624197D331164B51aEAe8Ef",
+  "ERC2771Forwarder": "0x370253247Db116ad261a03100454F1dDe0d820e5",
+  "DeployArgs": [
+    "Greenfield"
+  ],
+  "DeployTxHash": "0x324b3c37fd37bd65bf47574e25c087b4bda9a32b2e405e99780f9f8295ce1124"
+}
