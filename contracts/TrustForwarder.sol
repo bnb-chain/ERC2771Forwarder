@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.24;
+pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/metatx/ERC2771Forwarder.sol";
 
-contract TrustForwarder is ERC2771Forwarder {
+contract TrustedForwarder is ERC2771Forwarder {
 
     struct Call3Value {
         address target;
@@ -16,6 +16,8 @@ contract TrustForwarder is ERC2771Forwarder {
         bool success;
         bytes returnData;
     }
+
+    constructor() ERC2771Forwarder("TrustedForwarder") {}
 
     /// @notice Aggregate calls with a msg value
     /// @notice Reverts if msg.value is less than the sum of the call values
@@ -36,20 +38,22 @@ contract TrustForwarder is ERC2771Forwarder {
                 valAccumulator += val;
             }
 
-            (result.success, result.returnData) = calli.target.call{value: val}(calli.callData);
-            assembly {
-            // Revert if the call fails and failure is not allowed
-            // `allowFailure := calldataload(add(calli, 0x20))` and `success := mload(result)`
-                if iszero(or(calldataload(add(calli, 0x20)), mload(result))) {
-                // set "Error(string)" signature: bytes32(bytes4(keccak256("Error(string)")))
-                    mstore(0x00, 0x08c379a000000000000000000000000000000000000000000000000000000000)
-                // set data offset
-                    mstore(0x04, 0x0000000000000000000000000000000000000000000000000000000000000020)
-                // set length of revert string
-                    mstore(0x24, 0x0000000000000000000000000000000000000000000000000000000000000017)
-                // set revert string: bytes32(abi.encodePacked("Multicall3: call failed"))
-                    mstore(0x44, 0x4d756c746963616c6c333a2063616c6c206661696c6564000000000000000000)
-                    revert(0x00, 0x84)
+            /**
+             * @dev The EIP-2771 defines a contract-level protocol for Recipient contracts to accept
+             * meta-transactions through trusted Forwarder contracts. No protocol changes are made.
+             * Recipient contracts are sent the effective msg.sender (referred to as _msgSender())
+             * and msg.data (referred to as _msgData()) by appending additional calldata.
+             * EIP-2771 doc: https://eips.ethereum.org/EIPS/eip-2771
+             */
+            (result.success, result.returnData) = calli.target.call{value: val}(
+                abi.encodePacked(calli.callData, msg.sender)
+            );
+
+            if (!calli.allowFailure && !result.success) {
+                bytes memory revertData = result.returnData;
+                uint256 len = revertData.length;
+                assembly {
+                    revert(add(revertData, 0x20), len)
                 }
             }
 
