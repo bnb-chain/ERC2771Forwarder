@@ -35,9 +35,7 @@ contract TrustedForwarder is ERC2771Forwarder {
             uint256 val = calli.value;
             // Humanity will be a Type V Kardashev Civilization before this overflows - andreas
             // ~ 10^25 Wei in existence << ~ 10^76 size uint fits in a uint256
-            unchecked {
-                valAccumulator += val;
-            }
+            unchecked { valAccumulator += val; }
 
             /**
              * @dev The EIP-2771 defines a contract-level protocol for Recipient contracts to accept
@@ -46,10 +44,7 @@ contract TrustedForwarder is ERC2771Forwarder {
              * and msg.data (referred to as _msgData()) by appending additional calldata.
              * EIP-2771 doc: https://eips.ethereum.org/EIPS/eip-2771
              */
-            (result.success, result.returnData) = calli.target.call{value: val}(
-                abi.encodePacked(calli.callData, msg.sender)
-            );
-
+            (result.success, result.returnData) = calli.target.call{value: val}(abi.encodePacked(calli.callData, msg.sender));
             if (!calli.allowFailure && !result.success) {
                 bytes memory revertData = result.returnData;
                 uint256 len = revertData.length;
@@ -57,10 +52,7 @@ contract TrustedForwarder is ERC2771Forwarder {
                     revert(add(revertData, 0x20), len)
                 }
             }
-
-            unchecked {
-                ++i;
-            }
+            unchecked { ++i; }
         }
         // Finally, make sure the msg.value = SUM(call[0...i].value)
         require(msg.value == valAccumulator, "value mismatch");
