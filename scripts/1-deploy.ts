@@ -23,7 +23,7 @@ const main = async () => {
         ChainId: chainId.toString(),
 
         Operator: operator.address,
-        ERC2771Forwarder: contractAddress,
+        TrustedForwarder: contractAddress,
 
         DeployArgs,
         DeployTxHash: tx ? tx.hash : '',
