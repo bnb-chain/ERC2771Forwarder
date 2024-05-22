@@ -3,7 +3,7 @@ import fs from "fs";
 import {toHuman} from "./helper";
 const log = console.log
 
-const contractName = '@openzeppelin/contracts/metatx/ERC2771Forwarder.sol:ERC2771Forwarder';
+const contractName = 'TrustedForwarder';
 
 const main = async () => {
     const { chainId } = await ethers.provider.getNetwork();
@@ -13,8 +13,7 @@ const main = async () => {
     const balance = await ethers.provider.getBalance(operator.address);
     log('operator.address: ', operator.address, toHuman(balance));
 
-    const eip712Name = 'Greenfield'
-    const DeployArgs = [eip712Name]
+    const DeployArgs: string[] = []
     const contract = await ethers.deployContract(contractName, DeployArgs, operator);
     const contractAddress = await contract.getAddress()
     log('await contract.getAddress()', contractAddress);
