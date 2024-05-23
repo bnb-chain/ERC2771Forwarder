@@ -20,3 +20,5 @@ ignition/deployments/chain-31337
 **.DS_Store
 deployment/31337-deployment.json
 
+lib/forge-std
+out
