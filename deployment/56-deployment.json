@@ -1,9 +1,7 @@
 {
   "ChainId": "56",
   "Operator": "0xa6d0ecd59fF06Ff20dEB92ac8D58C87085EF1d1A",
-  "ERC2771Forwarder": "0x6766AB8Eb4682b668A5c7a92AC48c54FBC91b351",
-  "DeployArgs": [
-    "Greenfield"
-  ],
-  "DeployTxHash": "0xa69814d9618b76e41206058d352306ed4ed09046c2e0afd5947552bf363cd71e"
+  "TrustedForwarder": "0xADF1EC58d195c173812f0260bD68383ECA9389EA",
+  "DeployArgs": [],
+  "DeployTxHash": "0xe5487d2f78c962ab46ba46094e4671e92f107386676b03bef409ba3243d35047"
 }
