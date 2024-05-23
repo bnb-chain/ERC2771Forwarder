@@ -1,9 +1,9 @@
 // SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.24;
+pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/metatx/ERC2771Forwarder.sol";
 
-contract TrustForwarder is ERC2771Forwarder {
+contract TrustedForwarder is ERC2771Forwarder {
 
     struct Call3Value {
         address target;
@@ -17,7 +17,9 @@ contract TrustForwarder is ERC2771Forwarder {
         bytes returnData;
     }
 
-    /// @dev refer to https://github.com/mds1/multicall/blob/a1fa0644fa412cd3237ef7081458ecb2ffad7dbe/src/Multicall3.sol#L129
+    constructor() ERC2771Forwarder("TrustedForwarder") {}
+
+    /// @dev add erc2771 support based on Multicall3(https://github.com/mds1/multicall/blob/a1fa0644fa412cd3237ef7081458ecb2ffad7dbe/src/Multicall3.sol#L129)
     /// @notice Aggregate calls with a msg value
     /// @notice Reverts if msg.value is less than the sum of the call values
     /// @param calls An array of Call3Value structs
@@ -34,25 +36,25 @@ contract TrustForwarder is ERC2771Forwarder {
             // Humanity will be a Type V Kardashev Civilization before this overflows - andreas
             // ~ 10^25 Wei in existence << ~ 10^76 size uint fits in a uint256
             unchecked { valAccumulator += val; }
-            (result.success, result.returnData) = calli.target.call{value: val}(calli.callData);
-            assembly {
-            // Revert if the call fails and failure is not allowed
-            // `allowFailure := calldataload(add(calli, 0x20))` and `success := mload(result)`
-                if iszero(or(calldataload(add(calli, 0x20)), mload(result))) {
-                // set "Error(string)" signature: bytes32(bytes4(keccak256("Error(string)")))
-                    mstore(0x00, 0x08c379a000000000000000000000000000000000000000000000000000000000)
-                // set data offset
-                    mstore(0x04, 0x0000000000000000000000000000000000000000000000000000000000000020)
-                // set length of revert string
-                    mstore(0x24, 0x0000000000000000000000000000000000000000000000000000000000000017)
-                // set revert string: bytes32(abi.encodePacked("Multicall3: call failed"))
-                    mstore(0x44, 0x4d756c746963616c6c333a2063616c6c206661696c6564000000000000000000)
-                    revert(0x00, 0x84)
+
+            /**
+             * @dev The EIP-2771 defines a contract-level protocol for Recipient contracts to accept
+             * meta-transactions through trusted Forwarder contracts. No protocol changes are made.
+             * Recipient contracts are sent the effective msg.sender (referred to as _msgSender())
+             * and msg.data (referred to as _msgData()) by appending additional calldata.
+             * EIP-2771 doc: https://eips.ethereum.org/EIPS/eip-2771
+             */
+            (result.success, result.returnData) = calli.target.call{value: val}(abi.encodePacked(calli.callData, msg.sender));
+            if (!calli.allowFailure && !result.success) {
+                bytes memory revertData = result.returnData;
+                uint256 len = revertData.length;
+                assembly {
+                    revert(add(revertData, 0x20), len)
                 }
             }
             unchecked { ++i; }
         }
         // Finally, make sure the msg.value = SUM(call[0...i].value)
-        require(msg.value == valAccumulator, "Multicall3: value mismatch");
+        require(msg.value == valAccumulator, "value mismatch");
     }
 }

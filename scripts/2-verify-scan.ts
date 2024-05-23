@@ -14,11 +14,11 @@ const main = async () => {
     try {
         await run('verify:verify', {
             address: contracts.ERC2771Forwarder,
-            contract: '@openzeppelin/contracts/metatx/ERC2771Forwarder.sol:ERC2771Forwarder',
+            contract: 'TrustedForwarder',
             constructorArguments: contracts.DeployArgs,
         });
     } catch (e) {
-        log('verify ERC2771Forwarder error', e);
+        log('verify TrustedForwarder error', e);
     }
 };
 
