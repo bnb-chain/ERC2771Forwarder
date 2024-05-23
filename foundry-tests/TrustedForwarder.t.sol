@@ -15,6 +15,10 @@ contract TestApp is ERC2771Context {
     function test1(uint256 x, string memory y) public payable returns (address, uint256, string memory, uint256) {
         return (_msgSender(), x * x, string.concat(y, "test1"), msg.value);
     }
+
+    function test2(uint256 x, string memory y) public payable returns (address, uint256, string memory, uint256) {
+        revert("test failed");
+    }
 }
 
 contract TrustedForwarderTest is Test {
@@ -27,9 +31,9 @@ contract TrustedForwarderTest is Test {
     }
 
     function testTrustedForwarder() external {
-        uint256 totalValue = 3 ether;
+        uint256 totalValue = 6 ether;
 
-        TrustedForwarder.Call3Value[] memory calls = new TrustedForwarder.Call3Value[](2);
+        TrustedForwarder.Call3Value[] memory calls = new TrustedForwarder.Call3Value[](3);
         calls[0] = TrustedForwarder.Call3Value({
             target: address(testApp),
             allowFailure: false,
@@ -41,6 +45,12 @@ contract TrustedForwarderTest is Test {
             allowFailure: false,
             value: 2 ether,
             callData: abi.encodeWithSignature("test1(uint256,string)", 456, "456")
+        });
+        calls[2] = TrustedForwarder.Call3Value({
+            target: address(testApp),
+            allowFailure: true,
+            value: 3 ether,
+            callData: abi.encodeWithSignature("test2(uint256,string)", 789, "789")
         });
 
         // TrustedForwarderTest(user) => forwarder.aggregate3Value() => testApp.test()
@@ -56,5 +66,7 @@ contract TrustedForwarderTest is Test {
         assertEq(x, 456 * 456, "invalid x");
         assertEq(y, "456test1", "invalid y");
         assertEq(val, 2 ether, "invalid val");
+
+        assertEq(res[2].success, false, "invalid res[2].success");
     }
 }
