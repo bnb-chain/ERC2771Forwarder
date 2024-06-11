@@ -27,7 +27,7 @@ const main = async () => {
     const balance = await ethers.provider.getBalance(operator.address);
     log(`chainId = ${chainId}, operator.address: `, operator.address, toHuman(balance));
 
-    const SALT = "0x0000000000000000000000000000000000000000000000000000000000001111"
+    const SALT = "0x0000000000000000000000000000000000000000000000000000000000000000"
     const contractByteCode = await getContractBytecode(contractName)
     const hash = ethers.solidityPackedKeccak256(
         ['bytes1', 'address', 'bytes32', 'bytes32'],
