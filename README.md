@@ -16,8 +16,9 @@ $ forge t
 ## Deployment
 `TrustedForwarder` contract are deployed by using [Safe Singleton Factory](https://github.com/safe-global/safe-singleton-factory) to ensure the same deployed address on different chains.
 
-TrustedForwarder Address on All Chains: `0x5e06E40B2c35157AE1ba0a63e2371a34EB8Bde8b`
+TrustedForwarder Address on All Chains: `0xdb7d0bd38D223048B1cFf39700E4C5238e346f7F`
 
-- [BSC](https://bscscan.com/address/0x5e06E40B2c35157AE1ba0a63e2371a34EB8Bde8b#code) 
-- [BSC Testnet](https://testnet.bscscan.com/address/0x5e06E40B2c35157AE1ba0a63e2371a34EB8Bde8b#code)
-- [opBNB](https://opbnb.bscscan.com/address/0x5e06E40B2c35157AE1ba0a63e2371a34EB8Bde8b#code) 
+- [BSC](https://bscscan.com/address/0xdb7d0bd38D223048B1cFf39700E4C5238e346f7F#code) 
+- [BSC Testnet](https://testnet.bscscan.com/address/0xdb7d0bd38D223048B1cFf39700E4C5238e346f7F#code)
+- [opBNB](https://opbnb.bscscan.com/address/0xdb7d0bd38D223048B1cFf39700E4C5238e346f7F#code) 
+- [opBNB Testnet](https://opbnb-testnet.bscscan.com/address/0xdb7d0bd38D223048B1cFf39700E4C5238e346f7F#code) 
